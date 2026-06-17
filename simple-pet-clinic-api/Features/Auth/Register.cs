@@ -34,7 +34,6 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, APIResponseDTO>
         _userManager = userManager;
     }
     
-    
     public async Task<APIResponseDTO> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         var response = new APIResponseDTO();
@@ -44,7 +43,7 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, APIResponseDTO>
         {
             response.IsSuccess = false;
             response.StatusCode = HttpStatusCode.BadRequest;
-            response.ErrorMessages.Add("Email already exists!");
+            response.ErrorMessages.Add("Email is already exists!");
             return response;
         }
 

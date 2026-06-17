@@ -10,7 +10,7 @@ public class AuthModule : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/auth/").WithTags("Auth");
+        var group = app.MapGroup("/api/auth").WithTags("Auth");
         
         group.MapPost("/register", async (RegisterCommand cmd, IMediator mediator) =>
         {

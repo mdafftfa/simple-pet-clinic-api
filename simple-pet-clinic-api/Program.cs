@@ -16,6 +16,9 @@ builder.AddApplication();
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
+app.UseHttpsRedirection();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -32,14 +35,10 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapCarter();
-app.UseExceptionHandler();
 
 app.MapGet("/", () => "API is running!");
 app.MapGet("/db-check", async (AppDbContext db) => 
     await db.Database.CanConnectAsync() ? "Database Connected!" : "Connection Failed!");
-
-
-app.UseHttpsRedirection();
 
 await SeedDatabase();
 
