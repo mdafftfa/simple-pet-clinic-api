@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -33,7 +30,7 @@ public class GetCustomerProfileHandler : IRequestHandler<GetCustomerProfileComma
         _userManager = userManager;
         _httpContextAccessor = httpContextAccessor;
     }
-
+    
     public async Task<APIResponseDTO> Handle(GetCustomerProfileCommand request, CancellationToken cancellationToken)
     {
         var response = new APIResponseDTO();

@@ -184,7 +184,7 @@ namespace simple_pet_clinic_api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("simple_pet_clinic_api.Models.Entities.MedicalRecordEntity", b =>
+            modelBuilder.Entity("simple_pet_clinic_api.Models.Entities.GroomingRecordEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -195,10 +195,43 @@ namespace simple_pet_clinic_api.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("check_date");
 
-                    b.Property<string>("DiagnosisResults")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("diagnosis_results");
+                    b.Property<Guid>("GroomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("groomer_id");
+
+                    b.Property<Guid>("PetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("pet_id");
+
+                    b.Property<Guid>("ReservationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("reservation_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_grooming_record");
+
+                    b.HasIndex("GroomerId")
+                        .HasDatabaseName("ix_grooming_record_groomer_id");
+
+                    b.HasIndex("PetId")
+                        .HasDatabaseName("ix_grooming_record_pet_id");
+
+                    b.HasIndex("ReservationId")
+                        .HasDatabaseName("ix_grooming_record_reservation_id");
+
+                    b.ToTable("grooming_record", (string)null);
+                });
+
+            modelBuilder.Entity("simple_pet_clinic_api.Models.Entities.MedicalRecordEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CheckDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("check_date");
 
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uuid")
@@ -350,7 +383,7 @@ namespace simple_pet_clinic_api.Migrations
 
                     b.Property<Guid>("ItemId")
                         .HasColumnType("uuid")
-                        .HasColumnName("item_id");
+                        .HasColumnName("product_id");
 
                     b.Property<decimal>("Subtotal")
                         .HasColumnType("decimal(18,2)")
@@ -364,7 +397,7 @@ namespace simple_pet_clinic_api.Migrations
                         .HasName("pk_transaction_details");
 
                     b.HasIndex("ItemId")
-                        .HasDatabaseName("ix_transaction_details_item_id");
+                        .HasDatabaseName("ix_transaction_details_product_id");
 
                     b.HasIndex("TransactionId")
                         .HasDatabaseName("ix_transaction_details_transaction_id");
@@ -379,13 +412,13 @@ namespace simple_pet_clinic_api.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("customer_id");
+
                     b.Property<Guid?>("EmployeeId")
                         .HasColumnType("uuid")
                         .HasColumnName("employee_id");
-
-                    b.Property<DateTime>("PayTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("pay_time");
 
                     b.Property<Guid?>("ReservationId")
                         .HasColumnType("uuid")
@@ -395,8 +428,15 @@ namespace simple_pet_clinic_api.Migrations
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("total_price");
 
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("transaction_date");
+
                     b.HasKey("Id")
                         .HasName("pk_transaction");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_transaction_customer_id");
 
                     b.HasIndex("EmployeeId")
                         .HasDatabaseName("ix_transaction_employee_id");
@@ -550,6 +590,54 @@ namespace simple_pet_clinic_api.Migrations
                         .HasConstraintName("fk_asp_net_user_tokens_asp_net_users_user_id");
                 });
 
+            modelBuilder.Entity("simple_pet_clinic_api.Models.Entities.GroomingRecordEntity", b =>
+                {
+                    b.HasOne("simple_pet_clinic_api.Models.Entities.UserEntity", "Groomer")
+                        .WithMany()
+                        .HasForeignKey("GroomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_grooming_record_user_entity_groomer_id");
+
+                    b.HasOne("simple_pet_clinic_api.Models.Entities.PetEntity", "Pet")
+                        .WithMany()
+                        .HasForeignKey("PetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_grooming_record_pet_pet_id");
+
+                    b.HasOne("simple_pet_clinic_api.Models.Entities.ReservationEntity", "Reservation")
+                        .WithMany()
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_grooming_record_reservation_reservation_id");
+
+                    b.OwnsOne("simple_pet_clinic_api.Models.DTOs.GroomingResults", "GroomingResults", b1 =>
+                        {
+                            b1.Property<Guid>("GroomingRecordEntityId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.HasKey("GroomingRecordEntityId");
+
+                            b1.ToTable("grooming_record");
+
+                            b1.WithOwner()
+                                .HasForeignKey("GroomingRecordEntityId")
+                                .HasConstraintName("fk_grooming_record_grooming_record_id");
+                        });
+
+                    b.Navigation("Groomer");
+
+                    b.Navigation("GroomingResults")
+                        .IsRequired();
+
+                    b.Navigation("Pet");
+
+                    b.Navigation("Reservation");
+                });
+
             modelBuilder.Entity("simple_pet_clinic_api.Models.Entities.MedicalRecordEntity", b =>
                 {
                     b.HasOne("simple_pet_clinic_api.Models.Entities.UserEntity", "Doctor")
@@ -573,7 +661,25 @@ namespace simple_pet_clinic_api.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_medical_record_reservation_reservation_id");
 
+                    b.OwnsOne("simple_pet_clinic_api.Models.DTOs.MedicalResults", "MedicalResults", b1 =>
+                        {
+                            b1.Property<Guid>("MedicalRecordEntityId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.HasKey("MedicalRecordEntityId");
+
+                            b1.ToTable("medical_record");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MedicalRecordEntityId")
+                                .HasConstraintName("fk_medical_record_medical_record_id");
+                        });
+
                     b.Navigation("Doctor");
+
+                    b.Navigation("MedicalResults")
+                        .IsRequired();
 
                     b.Navigation("Pet");
 
@@ -620,7 +726,7 @@ namespace simple_pet_clinic_api.Migrations
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_transaction_details_service_product_item_id");
+                        .HasConstraintName("fk_transaction_details_service_product_product_id");
 
                     b.HasOne("simple_pet_clinic_api.Models.Entities.TransactionEntity", "Transaction")
                         .WithMany("TransactionDetails")
@@ -636,6 +742,13 @@ namespace simple_pet_clinic_api.Migrations
 
             modelBuilder.Entity("simple_pet_clinic_api.Models.Entities.TransactionEntity", b =>
                 {
+                    b.HasOne("simple_pet_clinic_api.Models.Entities.UserEntity", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_transaction_user_entity_customer_id");
+
                     b.HasOne("simple_pet_clinic_api.Models.Entities.UserEntity", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
@@ -645,6 +758,8 @@ namespace simple_pet_clinic_api.Migrations
                         .WithMany()
                         .HasForeignKey("ReservationId")
                         .HasConstraintName("fk_transaction_reservation_reservation_id");
+
+                    b.Navigation("Customer");
 
                     b.Navigation("Employee");
 
