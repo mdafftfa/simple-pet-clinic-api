@@ -199,6 +199,11 @@ namespace simple_pet_clinic_api.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("groomer_id");
 
+                    b.Property<string>("GroomingResults")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("grooming_results");
+
                     b.Property<Guid>("PetId")
                         .HasColumnType("uuid")
                         .HasColumnName("pet_id");
@@ -236,6 +241,11 @@ namespace simple_pet_clinic_api.Migrations
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uuid")
                         .HasColumnName("doctor_id");
+
+                    b.Property<string>("MedicaResults")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("medical_results");
 
                     b.Property<Guid>("PetId")
                         .HasColumnType("uuid")
@@ -613,25 +623,7 @@ namespace simple_pet_clinic_api.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_grooming_record_reservation_reservation_id");
 
-                    b.OwnsOne("simple_pet_clinic_api.Models.DTOs.GroomingResults", "GroomingResults", b1 =>
-                        {
-                            b1.Property<Guid>("GroomingRecordEntityId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
-
-                            b1.HasKey("GroomingRecordEntityId");
-
-                            b1.ToTable("grooming_record");
-
-                            b1.WithOwner()
-                                .HasForeignKey("GroomingRecordEntityId")
-                                .HasConstraintName("fk_grooming_record_grooming_record_id");
-                        });
-
                     b.Navigation("Groomer");
-
-                    b.Navigation("GroomingResults")
-                        .IsRequired();
 
                     b.Navigation("Pet");
 
@@ -661,25 +653,7 @@ namespace simple_pet_clinic_api.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_medical_record_reservation_reservation_id");
 
-                    b.OwnsOne("simple_pet_clinic_api.Models.DTOs.MedicalResults", "MedicalResults", b1 =>
-                        {
-                            b1.Property<Guid>("MedicalRecordEntityId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
-
-                            b1.HasKey("MedicalRecordEntityId");
-
-                            b1.ToTable("medical_record");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MedicalRecordEntityId")
-                                .HasConstraintName("fk_medical_record_medical_record_id");
-                        });
-
                     b.Navigation("Doctor");
-
-                    b.Navigation("MedicalResults")
-                        .IsRequired();
 
                     b.Navigation("Pet");
 

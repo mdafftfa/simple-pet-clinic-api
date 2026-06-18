@@ -27,12 +27,6 @@ public class AppDbContext : IdentityDbContext<UserEntity, IdentityRole<Guid>, Gu
         builder.Entity<ServiceProductEntity>()
             .Property(p => p.Price)
             .HasColumnType("decimal(18,2)");
-        
-        builder.Entity<GroomingRecordEntity>()
-            .OwnsOne(g => g.GroomingResultsDto);
-        
-        builder.Entity<MedicalRecordEntity>()
-            .OwnsOne(g => g.MedicalResultsDto);
 
         builder.Entity<TransactionEntity>()
             .Property(t => t.TotalPrice)
