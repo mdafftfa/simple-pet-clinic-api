@@ -67,6 +67,16 @@ public static class DependencyInjection
         
         builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
         
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
+        
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
                 .UseSnakeCaseNamingConvention());

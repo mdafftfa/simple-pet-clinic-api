@@ -31,7 +31,7 @@ public class TransactionCreateHandler : IRequestHandler<TransactionCreateCommand
 {
     private readonly AppDbContext _context;
     private readonly IHttpContextAccessor _httpContextAccessor;
-
+    
     public TransactionCreateHandler(AppDbContext context, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
