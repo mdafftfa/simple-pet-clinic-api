@@ -91,19 +91,6 @@
  | GET    | `/api/product`                  | Authenticated| Lihat semua produk/layanan             |
  | POST   | `/api/product/create`           | Operator     | Tambah produk baru                     |
 
- ## Akun Default
-
- Saat pertama kali dijalankan, sistem otomatis membuat akun admin:
-
- - **Email:** `admin@petclinic.com`
- - **Password:** `Admin_123!`
- - **Role:** Operator
-
- Gunakan akun ini untuk mengelola data awal (produk, pengguna, dll).
-
- ## Lisensi
-
- MIT – bebas digunakan untuk keperluan belajar maupun komersial.
 
 # API Request Example
 
@@ -255,3 +242,17 @@ Kategori yang valid: `"Product"`, `"Grooming"`, `"Medical"`, `"PetHotel"`.
 - Semua GUID menggunakan format standar `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`.
 - Tanggal dalam format ISO 8601 UTC (contoh: `2026-07-01T10:00:00Z`).
 - Endpoint yang memerlukan otorisasi harus menyertakan header `Authorization: Bearer <token>`.
+
+ ## Akun Default
+
+ Saat pertama kali dijalankan, sistem otomatis membuat akun admin:
+
+ - **Email:** `admin@petclinic.com`
+ - **Password:** `Admin_123!`
+ - **Role:** Operator
+
+ Gunakan akun ini untuk mengelola data awal (produk, pengguna, dll).
+
+ ## Lisensi
+
+ MIT – bebas digunakan untuk keperluan belajar maupun komersial.
