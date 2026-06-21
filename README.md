@@ -104,3 +104,154 @@
  ## Lisensi
 
  MIT – bebas digunakan untuk keperluan belajar maupun komersial.
+
+# API Request Example
+
+## 1. Register
+
+**POST** `/api/auth/register`
+
+```json
+{
+    "fullName": "Budi Santoso",
+    "email": "budi@example.com",
+    "password": "Rahasia123!",
+    "role": "Customer"
+}
+```
+
+| Parameter  | Tipe   | Deskripsi                       |
+|------------|--------|----------------------------------|
+| fullName   | string | Nama lengkap pengguna            |
+| email      | string | Email (harus valid)              |
+| password   | string | Minimal 6 karakter               |
+| role       | string | Operator, Cashier, Doctor, Groomer, Customer |
+
+## 2. Login
+
+**POST** `/api/auth/login`
+
+```json
+{
+    "email": "budi@example.com",
+    "password": "Rahasia123!"
+}
+```
+
+## 3. Tambah Hewan Peliharaan
+
+**POST** `/api/pet/add`
+
+```json
+{
+    "petName": "Milo",
+    "species": "Kucing",
+    "weight": 4.5,
+    "diseaseHistory": "Alergi makanan"
+}
+```
+
+| Parameter        | Tipe   | Deskripsi                 |
+|------------------|--------|---------------------------|
+| petName          | string | Nama hewan                |
+| species          | string | Jenis hewan               |
+| weight           | number | Berat (kg), > 0           |
+| diseaseHistory   | string | Riwayat penyakit (opsional)|
+
+## 4. Buat Reservasi
+
+**POST** `/api/reservation/create`
+
+```json
+{
+    "dateSchedule": "2026-07-01T10:00:00Z",
+    "destinationService": "Medis",
+    "petId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+```
+
+| Parameter           | Tipe   | Deskripsi                              |
+|---------------------|--------|----------------------------------------|
+| dateSchedule        | string | ISO 8601 UTC, harus > waktu sekarang   |
+| destinationService  | string | "Medis" atau "Grooming"                |
+| petId               | GUID   | ID hewan yang dimiliki                 |
+
+## 5. Ubah Status Reservasi
+
+**PUT** `/api/reservation/{reservationId}/status`
+
+```json
+{
+    "newStatus": "Done"
+}
+```
+
+Nilai yang valid: `"Waiting"` atau `"Done"`.
+
+## 6. Buat Rekam Medis
+
+**POST** `/api/medical-record/create`
+
+```json
+{
+    "medicaResults": "Kucing demam, diberikan infus.",
+    "reservationId": "guid-reservasi"
+}
+```
+
+## 7. Buat Rekam Grooming
+
+**POST** `/api/grooming-record/create`
+
+```json
+{
+    "groomingResults": "Mandi, potong kuku, bulu sehat.",
+    "reservationId": "guid-reservasi"
+}
+```
+
+## 8. Buat Transaksi
+
+**POST** `/api/transaction/create`
+
+```json
+{
+    "items": [
+        {
+            "productId": "guid-produk1",
+            "quantity": 2
+        },
+        {
+            "productId": "guid-produk2",
+            "quantity": 1
+        }
+    ]
+}
+```
+
+| Parameter   | Tipe     | Deskripsi              |
+|-------------|----------|------------------------|
+| productId   | GUID     | ID produk/layanan      |
+| quantity    | integer  | Jumlah pembelian (>0)  |
+
+## 9. Tambah Produk/Layanan Baru
+
+**POST** `/api/product/create`
+
+```json
+{
+    "itemName": "Vitamin Kucing",
+    "category": "Product",
+    "price": 45000.00,
+    "stock": 50
+}
+```
+
+Kategori yang valid: `"Product"`, `"Grooming"`, `"Medical"`, `"PetHotel"`.
+
+---
+
+**Catatan Umum:**
+- Semua GUID menggunakan format standar `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`.
+- Tanggal dalam format ISO 8601 UTC (contoh: `2026-07-01T10:00:00Z`).
+- Endpoint yang memerlukan otorisasi harus menyertakan header `Authorization: Bearer <token>`.
